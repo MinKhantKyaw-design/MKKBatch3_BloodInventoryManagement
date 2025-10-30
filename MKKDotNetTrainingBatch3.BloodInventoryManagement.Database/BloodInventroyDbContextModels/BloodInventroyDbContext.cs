@@ -76,11 +76,14 @@ public partial class BloodInventroyDbContext : DbContext
 
         modelBuilder.Entity<TblDonor>(entity =>
         {
-            entity.HasKey(e => e.DonorId).HasName("PK__tbl_Dono__052E3F98B52827D0");
+            entity.HasKey(e => new { e.DonorId, e.Email }).HasName("PK__tbl_Dono__052E3F98B52827D0");
 
             entity.ToTable("tbl_Donor");
 
-            entity.Property(e => e.DonorId).HasColumnName("DonorID");
+            entity.Property(e => e.DonorId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("DonorID");
+            entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.BloodType)
                 .HasMaxLength(3)
                 .IsUnicode(false)
@@ -89,7 +92,6 @@ public partial class BloodInventroyDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.DonationCount).HasDefaultValue(0);
-            entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.ModifiedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
